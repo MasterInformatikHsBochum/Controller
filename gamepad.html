@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>WeTRon</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width">
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		<!-- <script type="text/javascript" src="./websocket.js"></script> -->
+		<script src="./gamepad.js"></script>
+	</head>
+	<body>
+
+	<h1 id="gamepadPrompt"></h1>
+    <div id="game" style="display:none" class="gameSettings">
+        GameId:<input id="gId" type="number" />
+    </div>
+    <div id="player" style="display:none" class="gameSettings">
+        PlayerId:<input id="pId" type="number" />
+    </div>
+	<button id="btnStart" style="display:none" class="gameSettings" onclick="btnClicked()" >Join Game</button>
+	
+	<br /><br /><br />
+    <h1 id="gamepadDisplay" align="center"></h1>
+	</body>
+</html>
