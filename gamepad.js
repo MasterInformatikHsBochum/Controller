@@ -4,9 +4,6 @@ var btnLeft;
 var btnRight;
 var state = 0;
 var gameRuns = false;
-var gameId;
-var playerId;
-var typeAttr = "c";
 
 function canGame() {
     return "getGamepads" in navigator;
@@ -22,23 +19,20 @@ function hide(hide) {
 
 }
 
-async function reportOnGamepad(connection) {
+async function reportOnGamepad() {
     var gp = navigator.getGamepads()[0];
     var html = "";
-    if (!gameRuns && state > 4){
-        connectToGame(connection);
-        state=4;
-    }
+
     for (var i = 0; i < gp.buttons.length; i++) {
         if (gp.buttons[i].pressed) {
             if (gp.buttons[i] === btnLeft) {
                 html += " left<br/>";
-                if (gameRuns) changeDirection(270, connection);
+                if (gameRuns) changeDirection(270);
                 else changeDirectionFake(270);
             }
             else if (gp.buttons[i] === btnRight) {
                 html += " right<br/>";
-                if (gameRuns) changeDirection(90, connection);
+                if (gameRuns) changeDirection(90);
                 else changeDirectionFake(90);
             }
             else html += " other<br/>";
@@ -71,23 +65,6 @@ async function reportOnGamepad(connection) {
 $(document).ready(function () {
 
     if (canGame()) {
-    
-        var connection = new WebSocket('wss://wetron.tk/websocket/');
-        connection.onopen = function () {
-            console.log('Connection is open');
-            wsIsOpen();
-        };
-        
-        // Log errors
-        connection.onerror = function (error) {
-            console.log('WebSocket Error ' + error);
-        };
-        
-        
-
-        connection.onclose = function (){
-            console.log("WS is closed");
-        }
 
         var prompt = "To begin using your gamepad, connect it and press any button!";
         $("#gamepadPrompt").text(prompt);
@@ -96,7 +73,7 @@ $(document).ready(function () {
             hasGP = true;
             $("#gamepadPrompt").html("Gamepad connected!");
             console.log("connection event");
-            repGP = window.setInterval(reportOnGamepad, 100, connection);
+            repGP = window.setInterval(reportOnGamepad, 100);
         });
 
         $(window).on("gamepaddisconnected", function () {
@@ -153,44 +130,4 @@ function endGame(result){
     hide(false);
     $("#gamepadPrompt").html("You have " + result + " the game, you can join another Game!!!");
     gameRuns = false;
-}
-
-function checkGameData(gId, pId){
-    return (gId === gameId && pId === playerId);
-}
-
-function setGameData(gId, pId){
-    gameId = gId;
-    playerId = pId;
-}
-
-function connectToGame(connection){
-    var myObj = { "g":gameId, "p":playerId, "t":typeAttr, "e":0 };
-    console.log(JSON.stringify(myObj));
-    connection.onmessage = function (e) {
-            console.log('Server: ' + e.data);
-    };
-    connection.send(JSON.stringify(myObj));
-}
-
-function changeDirection(direction, connection){
-    var directionJSON = {"d":direction};
-    var myObj = { "g":gameId, "p":playerId, "t":typeAttr, "e":6, "v": directionJSON};
-    connection.send(JSON.stringify(myObj));
-}
-
-function changeDirectionFake(direction){
-    var directionJSON = {"d":direction};
-    var myObj = { "g":gameId, "p":playerId, "t":typeAttr, "e":6, "v": directionJSON};
-    console.log(JSON.stringify(myObj));
-} 
-
-function btnClicked (){
-    console.log("onClick");
-    var gId = $('#gId').val();
-    var pId = $('#pId').val();
-    if (!isNaN(gId) && !isNaN(pId)){
-        setGameData(gId, pId);
-        state++;
-    }
 }
