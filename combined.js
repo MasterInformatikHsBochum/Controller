@@ -99,6 +99,9 @@ $(document).ready(function () {
                             endGame("lost");
                         }
                         break;
+                    case 7:
+                        setDirectionArrow(response.v);
+                        break;
                     case 8: 
                         if (response.v.success){
                             console.log("connect to game");
@@ -168,10 +171,17 @@ function connectionFails(gId, pId){
 function gameWillStart(waitTime){
     if (waitTime <= 0){
         gameRuns = true;
+        $("#timer").html("");
     }
     else {
         seconds = parseInt(waitTime / 1000);
-        $("#gamepadDisplay").html("THE GAME WILL START IN " + seconds + " SECONDS!!!");
+        if (seconds < 2)
+            countdown1();
+        else if (seconds < 3)
+            countdown2();
+        else
+            countdown3();
+        $("#timer").html("THE GAME WILL START IN " + seconds + " SECONDS!!!");
     }
 }
 
@@ -194,18 +204,6 @@ function setGameData(gId, pId){
 function connectToGame(connection){
     var myObj = { "g":gameId, "p":playerId, "t":typeAttr, "e":0 };
     console.log(JSON.stringify(myObj));
-    /*connection.onmessage = function (e) {
-            console.log('Server: ' + e.data);
-            if (response.e != 8){
-                connectionFails(gameId, playerId);
-            }
-            else if (response.v.success){
-                isConnected(gameId, playerId);
-            }
-            else{
-                connectionFails(gameId, playerId);
-            }
-    };*/
     connection.send(JSON.stringify(myObj));
 }
 
@@ -228,5 +226,27 @@ function btnClicked (){
     if (!isNaN(gId) && !isNaN(pId)){
         setGameData(gId, pId);
         state++;
+    }
+}
+
+function setDirectionArrow(positionArray){
+    for (i in positionArray) {
+        var positionElemet = positionArray[i];
+        if (positionElemet.p === playerId){
+            switch (positionElemet.d){
+                case 0:
+                    driveStraight()
+                    break;
+                case 90:
+                    driveRight()
+                    break;
+                case 180:
+                    driveBack()
+                    break;
+                case 270:
+                    driveLeft()
+                    break;
+            }
+        }
     }
 }

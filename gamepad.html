@@ -6,22 +6,26 @@
 		<title>WeTron</title>
 		<meta name="description" content="">
 		<meta name="viewport" content="width=device-width">
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://code.jquery.com/jquery-latest.js"></script>
 		<!-- <script type="text/javascript" src="./websocket.js"></script> -->
 		<script src="./combined.js"></script>
+		<link rel="stylesheet" type="text/css" href="style.css">
 	</head>
 	<body>
-
-	<h1 id="gamepadPrompt"></h1>
-    <div id="game" style="display:none" class="gameSettings">
-        GameId:<input id="gId" type="number" />
-    </div>
-    <div id="player" style="display:none" class="gameSettings">
-        PlayerId:<input id="pId" type="number" />
-    </div>
-	<button id="btnStart" style="display:none" class="gameSettings" onclick="btnClicked()" >Join Game</button>
-	
-	<br /><br /><br />
-    <h1 id="gamepadDisplay" align="center"></h1>
+		<h1 id="gamepadPrompt" ></h1>
+		<div id="game" class="gameSettings">
+			GameId:<input id="gId" type="number" />
+		</div>
+		<div id="player" class="gameSettings">
+			PlayerId:<input id="pId" type="number" />
+		</div>
+		<button id="btnStart" class="gameSettings" onclick="btnClicked()" >Join Game</button>
+		
+		<br /><br /><br />
+		<iframe src="./game.html" name="game">
+		<h1 id="timer"></h1>
+		<h1 id="gamepadDisplay"></h1>
 	</body>
 </html>
+
+<!--  style="display:none" -->
