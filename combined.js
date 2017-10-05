@@ -22,6 +22,7 @@ function hide(hide) {
 
 }
 
+var fakeTimer = 3000;
 async function reportOnGamepad(connection) {
     var gp = navigator.getGamepads()[0];
     var html = "";
@@ -41,7 +42,9 @@ async function reportOnGamepad(connection) {
                 if (gameRuns) changeDirection(90, connection);
                 else changeDirectionFake(90);
             }
-            else html += " other<br/>";
+            else {
+                html += " other<br/>";
+            }
             switch (state) {
                 case 0:
                     $("#gamepadPrompt").html("Please wait for Websocket Connection to be opend");
@@ -169,18 +172,20 @@ function connectionFails(gId, pId){
 }
 
 function gameWillStart(waitTime){
+    var frame = document.getElementById("gameFrame").contentWindow;
     if (waitTime <= 0){
         gameRuns = true;
         $("#timer").html("");
     }
     else {
         seconds = parseInt(waitTime / 1000);
+        console.log("THE GAME WILL START IN " + seconds + " SECONDS!!!");
         if (seconds < 2)
-            countdown1();
+            frame.countdown1();
         else if (seconds < 3)
-            countdown2();
+            frame.countdown2();
         else
-            countdown3();
+            frame.countdown3();
         $("#timer").html("THE GAME WILL START IN " + seconds + " SECONDS!!!");
     }
 }
@@ -212,7 +217,6 @@ function changeDirection(direction, connection){
     var myObj = { "g":gameId, "p":playerId, "t":typeAttr, "e":6, "v": directionJSON};
     connection.send(JSON.stringify(myObj));
 }
-
 function changeDirectionFake(direction){
     var directionJSON = {"d":direction};
     var myObj = { "g":gameId, "p":playerId, "t":typeAttr, "e":6, "v": directionJSON};
@@ -230,21 +234,22 @@ function btnClicked (){
 }
 
 function setDirectionArrow(positionArray){
+    var frame = document.getElementById("gameFrame").contentWindow;
     for (i in positionArray) {
         var positionElemet = positionArray[i];
         if (positionElemet.p === playerId){
             switch (positionElemet.d){
                 case 0:
-                    driveStraight()
+                    frame.driveStraight()
                     break;
                 case 90:
-                    driveRight()
+                    frame.driveRight()
                     break;
                 case 180:
-                    driveBack()
+                    frame.driveBack()
                     break;
                 case 270:
-                    driveLeft()
+                    frame.driveLeft()
                     break;
             }
         }
