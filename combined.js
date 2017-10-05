@@ -7,6 +7,7 @@ var gameRuns = false;
 var gameId = 0;
 var playerId = 0;
 var typeAttr = "c";
+var directionSafe = 0;
 
 function canGame() {
     return "getGamepads" in navigator;
@@ -216,6 +217,7 @@ function changeDirection(direction, connection){
     var directionJSON = {"d":direction};
     var myObj = { "g":gameId, "p":playerId, "t":typeAttr, "e":6, "v": directionJSON};
     connection.send(JSON.stringify(myObj));
+    setDirectionArrowManule(direction);
 }
 function changeDirectionFake(direction){
     var directionJSON = {"d":direction};
@@ -230,6 +232,26 @@ function btnClicked (){
     if (!isNaN(gId) && !isNaN(pId)){
         setGameData(gId, pId);
         state++;
+    }
+}
+
+function setDirectionArrowManule(add){
+    var frame = document.getElementById("gameFrame").contentWindow;
+    directionSafe += add;
+    directionSafe = directionSafe % 360;
+    switch (directionSafe){
+        case 0:
+            frame.driveStraight()
+            break;
+        case 90:
+            frame.driveRight()
+            break;
+        case 180:
+            frame.driveBack()
+            break;
+        case 270:
+            frame.driveLeft()
+            break;
     }
 }
 
